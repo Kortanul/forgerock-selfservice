@@ -3,6 +3,7 @@
   ~ DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
   ~
   ~ Copyright (c) 2015 ForgeRock AS. All Rights Reserved
+  ~ Portions Copyright 2017 Wren Security.
   ~
   ~ The contents of this file are subject to the terms
   ~ of the Common Development and Distribution License
@@ -24,6 +25,7 @@
   -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <artifactId>forgerock-selfservice</artifactId>
         <groupId>org.forgerock.commons</groupId>
@@ -31,8 +33,10 @@
     </parent>
 
     <artifactId>forgerock-selfservice-example-ui</artifactId>
-    <name>ForgeRock UI for ForgeRock Self-Service Example</name>
     <packaging>pom</packaging>
+
+    <name>Wren Security Commons Self Service - Example UI</name>
+    <description>UI for Wren Security Self-Service Example</description>
 
     <properties>
         <forgerock-ui.version>8.6.0</forgerock-ui.version>
@@ -44,6 +48,7 @@
                 <directory>${basedir}/src/main/resources</directory>
                 <filtering>true</filtering>
             </resource>
+
             <resource>
                 <directory>${basedir}/src/main/js</directory>
                 <filtering>true</filtering>
@@ -55,15 +60,18 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>jslint-maven-plugin</artifactId>
                 <version>1.0.1</version>
+
                 <configuration>
                     <excludes>
                         <exclude>**/libs/*.js</exclude>
                         <exclude>**/*Test.js</exclude>
                     </excludes>
                 </configuration>
+
                 <executions>
                     <execution>
                         <phase>validate</phase>
+
                         <goals>
                             <goal>jslint</goal>
                         </goals>
@@ -92,9 +100,11 @@
                     <execution>
                         <id>unpack</id>
                         <phase>prepare-package</phase>
+
                         <goals>
                             <goal>unpack</goal>
                         </goals>
+
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
@@ -107,12 +117,15 @@
                             </artifactItems>
                         </configuration>
                     </execution>
+
                     <execution>
                         <id>copy-dependencies-less</id>
                         <phase>prepare-package</phase>
+
                         <goals>
                             <goal>copy-dependencies</goal>
                         </goals>
+
                         <configuration>
                             <includeArtifactIds>less</includeArtifactIds>
                             <includeTypes>js</includeTypes>
@@ -127,27 +140,34 @@
 
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
+
                 <executions>
                     <execution>
                         <id>prepare-working-dir</id>
                         <phase>prepare-package</phase>
+
                         <goals>
                             <goal>single</goal>
                         </goals>
+
                         <configuration>
                             <finalName>www</finalName>
                             <appendAssemblyId>false</appendAssemblyId>
+
                             <descriptors>
                                 <descriptor>src/main/assembly/dir.xml</descriptor>
                             </descriptors>
                         </configuration>
                     </execution>
+
                     <execution>
                         <id>build-final-zip</id>
                         <phase>package</phase>
+
                         <goals>
                             <goal>single</goal>
                         </goals>
+
                         <configuration>
                             <descriptors>
                                 <descriptor>src/main/assembly/zip.xml</descriptor>
@@ -160,10 +180,15 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
+
                 <executions>
                     <execution>
                         <id>compile-structure-less-to-css</id>
                         <phase>prepare-package</phase>
+
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
 
                         <configuration>
                             <target name="compileLess">
@@ -177,33 +202,29 @@
 
                             </target>
                         </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
                     </execution>
+
                     <execution>
                         <id>compile-theme-less-to-css</id>
                         <phase>prepare-package</phase>
 
                         <configuration>
                             <target name="compileLess">
-
                                 <java classname="org.mozilla.javascript.tools.shell.Main" fork="true">
                                     <classpath refid="maven.compile.classpath" />
                                     <arg value="${project.build.directory}/less/less-1.5.1-rhino.js" />
                                     <arg value="${project.build.directory}/www/css/theme.less" />
                                     <arg value="${project.build.directory}/www/css/theme.css" />
                                 </java>
-
                             </target>
                         </configuration>
+
                         <goals>
                             <goal>run</goal>
                         </goals>
                     </execution>
                 </executions>
             </plugin>
-
         </plugins>
     </build>
 
@@ -215,6 +236,7 @@
             <type>zip</type>
             <classifier>www</classifier>
         </dependency>
+
         <dependency>
             <groupId>org.forgerock.commons.ui.libs</groupId>
             <artifactId>less</artifactId>
@@ -222,10 +244,12 @@
             <classifier>rhino</classifier>
             <type>js</type>
         </dependency>
+
         <dependency>
             <groupId>de.matrixweb.osgi.wrapped</groupId>
             <artifactId>osgi-wrapped-rhino</artifactId>
             <version>1.7R4</version>
+
             <exclusions>
                 <exclusion>
                     <groupId>org.mozilla</groupId>
